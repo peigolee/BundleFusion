@@ -983,8 +983,14 @@ void CALLBACK OnD3D11FrameRender(ID3D11Device* pd3dDevice, ID3D11DeviceContext* 
 	while (g_CudaImageManager->hasBundlingFrameRdy()) { //wait until bundling is done with previous frame
 		ConditionManager::waitImageManagerFrameReady(ConditionManager::Recon);
 	}
-	bool bGotDepth = g_CudaImageManager->process();
-	if (bGotDepth) {
+    // The problem that i investigated was that the kinect one provides 30fps max. 
+    // If the frame is not ready to fetch, pDepthFrameReference->AcquireFrame returns a FAIL. 
+    // This causes a dead lock in the process lock management. 
+    // The while loops forces the CALLBACK to wait untill a new frame is available.
+	// bool bGotDepth = g_CudaImageManager->process();
+    bool bGotDepth;
+    while (!(bGotDepth = g_CudaImageManager->process()));
+    if (bGotDepth) {
 		g_CudaImageManager->setBundlingFrameRdy();					//ready for bundling thread
 		ConditionManager::unlockAndNotifyImageManagerFrameReady(ConditionManager::Recon);
 	}

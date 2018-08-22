@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
-
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include "KinectOneSensor.h"
 
 #ifdef KINECT_ONE
@@ -40,6 +41,9 @@ KinectOneSensor::KinectOneSensor()
 	HRESULT hr = S_FALSE;
 	while(hr != S_OK) hr = m_pMultiSourceFrameReader->AcquireLatestFrame(&pMultiSourceFrame);
 
+    mDepthImg = std::make_shared<cv::Mat>(depthHeight, depthWidth, CV_16UC1);
+    mImg8bit = std::make_shared<cv::Mat>(depthHeight, depthWidth, CV_8UC1);
+    cv:cvNamedWindow("DepthMap");
 	if(SUCCEEDED(hr))
 	{
 		IDepthFrameReference* pDepthFrameReference = NULL;
@@ -186,6 +190,8 @@ bool KinectOneSensor::processDepth()
 
 	HRESULT hr = m_pMultiSourceFrameReader->AcquireLatestFrame(&pMultiSourceFrame);
 
+    // cv::Mat mDepthImg(424, 512, CV_16UC1);
+    // cv::Mat mImg8bit(424, 512, CV_8UC1);
 	if(SUCCEEDED(hr))
 	{
 		IDepthFrameReference* pDepthFrameReference = NULL;
@@ -194,6 +200,19 @@ bool KinectOneSensor::processDepth()
 		if (SUCCEEDED(hr))
 		{
 			hr = pDepthFrameReference->AcquireFrame(&pDepthFrame);
+            // 4c. copy the depth map to image
+            if (SUCCEEDED(hr))
+            {
+                pDepthFrame->CopyFrameDataToArray(mDepthImg->rows * mDepthImg->cols,
+                    reinterpret_cast<UINT16*>(mDepthImg->data));
+
+                // 4d. convert from 16bit to 8bit
+                //mDepthImg->convertTo(*mImg8bit, CV_8U, 255.0f / 8000.0f);
+                //*mImg8bit = cv::imread("D:\\Modeling\\CODE\\BundleFusion\\BundleFusion\\img\\teaser.jpg");
+                //cv::imshow("Depth Map", *mImg8bit);
+                //cv::waitKey(1);
+            }
+
 		}
 
 		SafeRelease(pDepthFrameReference);

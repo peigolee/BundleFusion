@@ -26,17 +26,21 @@ public:
 	~PrimeSenseSensor();
 
 	//! Initializes the sensor
-	void createFirstConnected();
+	void createFirstConnected() override;
 
 	//! Processes the depth data (and color)
-	bool processDepth();
+	bool processDepth() override;
 	
 
 	//! Processes the Kinect color data
-	bool processColor()
+	bool processColor() override
 	{
 		return true;
 	}
+
+    virtual std::string getSensorName() const override{
+        return "whatever";
+    }
 
 protected:
 	//! reads depth and color from the sensor

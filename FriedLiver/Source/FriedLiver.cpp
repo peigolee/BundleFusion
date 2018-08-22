@@ -280,7 +280,7 @@ int main(int argc, char** argv)
 		//if (GlobalBundlingState::get().s_recordSolverConvergence) g_bundler->saveConvergence("convergence.txt");
 		//g_bundler->saveCompleteTrajectory("trajectory.bin");
 		//g_bundler->saveSiftTrajectory("siftTrajectory.bin");
-		//g_bundler->saveIntegrateTrajectory("intTrajectory.bin");
+	 	//g_bundler->saveIntegrateTrajectory("intTrajectory.bin");
 		//g_bundler->saveLogsToFile();
 
 #ifdef RUN_MULTITHREADED 
@@ -314,7 +314,7 @@ int main(int argc, char** argv)
 		MessageBoxA(NULL, "UNKNOWN EXCEPTION", "Exception caught", MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
-
+    system("pause");
 
 	return 0;
 }

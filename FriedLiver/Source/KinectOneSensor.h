@@ -5,7 +5,7 @@
 #include "GlobalAppState.h"
 
 #ifdef KINECT_ONE
-
+#include <opencv2/core.hpp>
 #include <Kinect.h>
 #include "RGBDSensor.h"
 
@@ -77,6 +77,8 @@ private:
 	DepthSpacePoint* m_depthSpacePoints;
 	CameraSpacePoint* m_cameraSpacePoints;
 
+    std::shared_ptr<cv::Mat> mDepthImg;
+    std::shared_ptr<cv::Mat> mImg8bit;
 	bool				m_bFirstFrame;
 };
 
